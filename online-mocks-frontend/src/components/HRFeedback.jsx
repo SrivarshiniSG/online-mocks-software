@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../axios/axios';
 import logo from '../assets/foresebluelogo.png';
 
 function HRFeedback() {
@@ -24,7 +24,7 @@ function HRFeedback() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/hr/feedback', feedback);
+      const response = await api.post('/api/hr/feedback', feedback);
       console.log('Feedback submitted:', response.data);
       setShowSuccessModal(true);
     } catch (error) {
