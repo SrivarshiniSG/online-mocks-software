@@ -20,8 +20,8 @@ function AdminLogin() {
 
     try {
       const response = await api.post("/api/admin/login", credentials);
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("role", response.data.role);
+      sessionStorage.setItem("token", response.data.token);
+      sessionStorage.setItem("role", response.data.role);
       navigate("/admin-dashboard");
     } catch (error) {
       setError("Invalid credentials. Please try again.");

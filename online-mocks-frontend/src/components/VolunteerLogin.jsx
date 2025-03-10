@@ -18,8 +18,8 @@ function VolunteerLogin() {
     setIsLoading(true);
     try {
       const response = await api.post("/api/volunteer/login", credentials);
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("role", response.data.role);
+      sessionStorage.setItem("token", response.data.token);
+      sessionStorage.setItem("role", response.data.role);
       navigate("/volunteer-dashboard");
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");

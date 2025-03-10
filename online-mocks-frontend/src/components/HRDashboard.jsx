@@ -38,9 +38,9 @@ function HRDashboard() {
     const fetchData = async () => {
       try {
         // Fetch HR details
-        const hrName = localStorage.getItem("hrName");
-        const hrCompany = localStorage.getItem("hrCompany");
-        const hrId = localStorage.getItem("hrId");
+        const hrName = sessionStorage.getItem("hrName");
+        const hrCompany = sessionStorage.getItem("hrCompany");
+        const hrId = sessionStorage.getItem("hrId");
         setHR({ name: hrName, company: hrCompany, id: hrId });
 
         // Fetch allocated students
@@ -104,7 +104,7 @@ function HRDashboard() {
     setSelectedStudent(student);
 
     // Check if the HR has already reviewed this student
-    const hrId = localStorage.getItem("hrId");
+    const hrId = sessionStorage.getItem("hrId");
     const existingReview = student.personalReport?.find((report) => {
       return report.hrId === hrId;
     });
@@ -170,23 +170,23 @@ function HRDashboard() {
   const handleSubmitReview = async () => {
     // Check if all required fields are filled
     const requiredFields = [
-      'professionalAppearanceAndAttitude',
-      'managerialAptitude',
-      'generalIntelligenceAndAwareness',
-      'technicalKnowledge',
-      'communicationSkills',
-      'achievementsAndAmbition',
-      'selfConfidence',
-      'overallScore',
-      'strengths',
-      'pointsToImproveOn',
-      'comments'
+      "professionalAppearanceAndAttitude",
+      "managerialAptitude",
+      "generalIntelligenceAndAwareness",
+      "technicalKnowledge",
+      "communicationSkills",
+      "achievementsAndAmbition",
+      "selfConfidence",
+      "overallScore",
+      "strengths",
+      "pointsToImproveOn",
+      "comments",
     ];
 
-    const missingFields = requiredFields.filter(field => !reviewData[field]);
-    
+    const missingFields = requiredFields.filter((field) => !reviewData[field]);
+
     if (missingFields.length > 0) {
-      setErrorMessage('Please fill in all required fields before submitting.');
+      setErrorMessage("Please fill in all required fields before submitting.");
       setShowErrorModal(true);
       return;
     }
@@ -204,7 +204,9 @@ function HRDashboard() {
       setStudents(studentsResponse.data);
     } catch (error) {
       console.error("Error submitting review:", error);
-      setErrorMessage(error.response?.data?.message || "Failed to submit review");
+      setErrorMessage(
+        error.response?.data?.message || "Failed to submit review"
+      );
       setShowErrorModal(true);
       setSubmitting(false);
     }
@@ -212,18 +214,18 @@ function HRDashboard() {
 
   // Function to check if the HR has already reviewed a student
   const hasReviewedStudent = (student) => {
-    const hrId = localStorage.getItem("hrId");
+    const hrId = sessionStorage.getItem("hrId");
     return student.personalReport?.some((report) => report.hrId === hrId);
   };
 
   const handleLogout = () => {
-    localStorage.clear();
+    sessionStorage.clear();
     navigate("/hr-login");
   };
 
   // Filter students based on the selected filter option
   const filteredStudents = () => {
-    const hrId = localStorage.getItem("hrId");
+    const hrId = sessionStorage.getItem("hrId");
 
     switch (filterOption) {
       case "reviewed":
@@ -348,9 +350,7 @@ function HRDashboard() {
             >
               <svg
                 className={`w-8 h-8 ${
-                  star <= value / 2
-                    ? 'text-yellow-400'
-                    : 'text-gray-300'
+                  star <= value / 2 ? "text-yellow-400" : "text-gray-300"
                 } transition-colors duration-150`}
                 fill="currentColor"
                 viewBox="0 0 20 20"
@@ -451,6 +451,25 @@ function HRDashboard() {
                       {hr?.name}
                     </p>
                   </div>
+                  <button
+                    onClick={() => navigate("/hr-feedback")}
+                    className="flex items-center space-x-2 w-full text-left px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                  >
+                    <svg
+                      className="w-5 h-5 text-gray-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
+                      />
+                    </svg>
+                    <span>Feedback</span>
+                  </button>
                   <button
                     onClick={handleLogout}
                     className="flex items-center space-x-2 w-full text-left px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors duration-150"
@@ -861,7 +880,9 @@ function HRDashboard() {
                                   : "bg-blue-500 hover:bg-blue-600"
                               } text-white px-2 py-1.5 rounded-lg transform hover:-translate-y-0.5 transition-all duration-200 w-full text-xs md:text-sm`}
                             >
-                              {hasReviewedStudent(student) ? "Edit Grade" : "Grade"}
+                              {hasReviewedStudent(student)
+                                ? "Edit Grade"
+                                : "Grade"}
                             </button>
                           </td>
                         </tr>
@@ -1016,7 +1037,8 @@ function HRDashboard() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Points to Improve On <span className="text-red-500">*</span>
+                        Points to Improve On{" "}
+                        <span className="text-red-500">*</span>
                       </label>
                       <textarea
                         name="pointsToImproveOn"
@@ -1031,7 +1053,8 @@ function HRDashboard() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Additional Comments <span className="text-red-500">*</span>
+                        Additional Comments{" "}
+                        <span className="text-red-500">*</span>
                       </label>
                       <textarea
                         name="comments"

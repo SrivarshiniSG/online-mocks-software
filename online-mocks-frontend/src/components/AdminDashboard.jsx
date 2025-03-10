@@ -34,13 +34,13 @@ function AdminDashboard() {
 
   useEffect(() => {
     fetchData();
-  }, [activeTab, currentPage, searchTerm]);
+  }, [activeTab, currentPage, searchTerm, sortField, sortOrder]);
 
   const fetchData = async () => {
     try {
       if (activeTab === "students") {
         const response = await api.get(
-          `/api/admin/students?page=${currentPage}&search=${searchTerm}`
+          `/api/admin/students?page=${currentPage}&search=${searchTerm}&sortField=${sortField}&sortOrder=${sortOrder}`
         );
         setStudents(response.data.students);
         setTotalPages(response.data.totalPages);
@@ -149,7 +149,7 @@ function AdminDashboard() {
   };
 
   const handleLogout = () => {
-    localStorage.clear();
+    sessionStorage.clear();
     navigate("/admin-login");
   };
 
@@ -248,14 +248,8 @@ function AdminDashboard() {
     }
   };
 
-  // Add this function to sort students
-  const sortedStudents = [...students].sort((a, b) => {
-    const aValue = a[sortField]?.toLowerCase() || "";
-    const bValue = b[sortField]?.toLowerCase() || "";
-    return sortOrder === "asc"
-      ? aValue.localeCompare(bValue)
-      : bValue.localeCompare(aValue);
-  });
+  // Remove the sortedStudents function since sorting will be handled by the backend
+  const sortedStudents = students; // Just use students directly since they'll come pre-sorted
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -393,20 +387,45 @@ function AdminDashboard() {
                 <tr>
                   {activeTab === "students" ? (
                     <>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-white uppercase tracking-wider w-32">
-                        Registration Number
+                      <th
+                        onClick={() => handleSort("registerNumber")}
+                        className="px-6 py-4 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer hover:bg-purple-700 w-32"
+                      >
+                        Registration Number{" "}
+                        {sortField === "registerNumber" &&
+                          (sortOrder === "asc" ? "↑" : "↓")}
                       </th>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-white uppercase tracking-wider w-40">
-                        Name
+                      <th
+                        onClick={() => handleSort("name")}
+                        className="px-6 py-4 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer hover:bg-purple-700 w-40"
+                      >
+                        Name{" "}
+                        {sortField === "name" &&
+                          (sortOrder === "asc" ? "↑" : "↓")}
                       </th>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-white uppercase tracking-wider w-32">
-                        Department
+                      <th
+                        onClick={() => handleSort("department")}
+                        className="px-6 py-4 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer hover:bg-purple-700 w-32"
+                      >
+                        Department{" "}
+                        {sortField === "department" &&
+                          (sortOrder === "asc" ? "↑" : "↓")}
                       </th>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-white uppercase tracking-wider w-28">
-                        Aptitude Score
+                      <th
+                        onClick={() => handleSort("aptitudeScore")}
+                        className="px-6 py-4 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer hover:bg-purple-700 w-28"
+                      >
+                        Aptitude Score{" "}
+                        {sortField === "aptitudeScore" &&
+                          (sortOrder === "asc" ? "↑" : "↓")}
                       </th>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-white uppercase tracking-wider w-24">
-                        GD Score
+                      <th
+                        onClick={() => handleSort("gdScore")}
+                        className="px-6 py-4 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer hover:bg-purple-700 w-24"
+                      >
+                        GD Score{" "}
+                        {sortField === "gdScore" &&
+                          (sortOrder === "asc" ? "↑" : "↓")}
                       </th>
                       <th className="px-6 py-4 text-left text-xs font-medium text-white uppercase tracking-wider w-32">
                         Interviews Attended

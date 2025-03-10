@@ -22,7 +22,7 @@ function VolunteerDashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const token = localStorage.getItem("token");
+        // const token = sessionStorage.getItem("token");
         // if (!token) {
         //   navigate("/volunteer-login");
         //   return;
@@ -139,7 +139,7 @@ function VolunteerDashboard() {
   };
 
   const handleLogout = () => {
-    localStorage.clear();
+    sessionStorage.clear();
     navigate("/volunteer-login");
   };
 

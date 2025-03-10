@@ -232,6 +232,8 @@ router.get("/students", auth, checkRole(["admin"]), async (req, res) => {
     const limit = 50;
     const skip = (page - 1) * limit;
     const searchTerm = req.query.search || "";
+    const sortField = req.query.sortField || "name";
+    const sortOrder = req.query.sortOrder || "asc";
 
     // First, if searching for HR name, find matching HR IDs
     let matchingHrIds = [];
@@ -254,6 +256,16 @@ router.get("/students", auth, checkRole(["admin"]), async (req, res) => {
     // Get total count for pagination
     const totalStudents = await Student.countDocuments(searchQuery);
 
+    // Create sort object
+    let sortObj = {};
+    if (sortField === "aptitudeScore" || sortField === "gdScore") {
+      // For numeric fields, convert to numbers for proper sorting
+      sortObj[sortField] = sortOrder === "asc" ? 1 : -1;
+    } else {
+      // For string fields, use case-insensitive collation
+      sortObj[sortField] = sortOrder === "asc" ? 1 : -1;
+    }
+
     // Get students with populated HR data
     const students = await Student.find(searchQuery)
       .populate({
@@ -265,7 +277,8 @@ router.get("/students", auth, checkRole(["admin"]), async (req, res) => {
       )
       .skip(skip)
       .limit(limit)
-      .sort({ name: 1 });
+      .sort(sortObj)
+      .collation({ locale: "en", strength: 2 }); // Case-insensitive sorting
 
     res.json({
       students,
